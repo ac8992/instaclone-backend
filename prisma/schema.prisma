@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String?
+  username String @unique
+  email String @unique
+  password String
+  bio String?
+  avatar String?
+  photos Photo[]
+  likes Like[]
+  comments Comment[]
+  followers User[] @relation("FollowRelation", references: [id])
+  following User[] @relation("FollowRelation", references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Photo {
+  id Int @id @default(autoincrement())
+  user User  @relation(fields: [userId], references: [id])
+  userId Int
+  file String
+  caption String?
+  comments Comment[]
+  hashtags Hashtag[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  likes Like[]
+}
+
+model Hashtag {
+  id Int @id @default(autoincrement())
+  hashtag String @unique
+  photos Photo[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+  photo Photo @relation(fields: [photoId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  photoId Int
+  userId Int
+  
+  @@unique([photoId, userId])
+}
+ 
+model Comment {
+  id Int @id @default(autoincrement())
+  photo Photo @relation(fields: [photoId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  payload String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  photoId Int
+  userId Int
+}
