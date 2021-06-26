@@ -32,3 +32,9 @@ Instaclone Backend
 - [x] Edit Comment
 - [x] Delete Comment
 
+## DMs
+- [x] See Room
+- [x] Send Message(Create Room)
+- [] See Rooms
+= [] See Message
+- [] Realtime Messages
